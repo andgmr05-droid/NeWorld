@@ -4,8 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>El Refugio de las Creaciones</title>
-
-  <!-- Fuentes y estilo -->
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <style>
     * {
@@ -16,119 +14,221 @@
 
     body {
       font-family: 'VT323', monospace;
-      background: radial-gradient(circle at top, #0a0a0f, #000);
+      background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
       color: #fff;
-      height: 100vh;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      overflow: hidden;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 900px;
+      width: 100%;
+      text-align: center;
     }
 
     h1 {
-      font-size: 2rem;
+      font-size: 3rem;
       letter-spacing: 3px;
-      text-shadow: 0 0 8px #8df;
-      margin-bottom: 30px;
+      margin-bottom: 40px;
       text-align: center;
       animation: fadeIn 2s ease;
+    }
+
+    .textcol {
+      font-size: 3.5rem;
+      font-weight: bold;
+      background: linear-gradient(45deg, #ff6b6b, #45b7d1, #96ceb4, #ffeaa7, #dda0dd);
+      background-size: 400% 400%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: cambioColores 5s ease infinite;
+      margin-bottom: 20px;
+    }
+
+    .subtitle {
+      font-size: 1.5rem;
+      margin-bottom: 50px;
+      opacity: 0.8;
+      animation: fadeIn 2.5s ease;
     }
 
     .menu {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 20px;
-      width: 90%;
-      max-width: 600px;
+      gap: 25px;
+      width: 100%;
+      margin-bottom: 50px;
     }
 
     .item {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
       width: 45%;
-      padding: 20px;
+      padding: 30px 20px;
       text-align: center;
-      font-size: 1.2rem;
-      transition: all 0.3s ease;
+      font-size: 1.4rem;
+      transition: all 0.4s ease;
       cursor: pointer;
-      backdrop-filter: blur(6px);
+      backdrop-filter: blur(10px);
+      text-decoration: none;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 150px;
     }
 
     .item:hover {
       background: rgba(255, 255, 255, 0.15);
-      transform: scale(1.05);
-      box-shadow: 0 0 15px #8df5;
+      transform: translateY(-8px);
+      box-shadow: 0 10px 25px rgba(141, 221, 255, 0.3);
+      border-color: rgba(141, 221, 255, 0.4);
     }
 
     .item:active {
-      transform: scale(0.97);
+      transform: translateY(-4px);
+    }
+
+    .icon {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
     }
 
     footer {
-      position: absolute;
-      bottom: 10px;
-      font-size: 0.9rem;
+      margin-top: 30px;
+      font-size: 1rem;
       opacity: 0.6;
+      text-align: center;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Adaptación para celular */
-    @media (max-width: 600px) {
-      h1 { font-size: 1.6rem; }
-      .item { width: 80%; }
+    @keyframes cambioColores {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
     }
-    .textcol {
-            font-size: 40px;
-            font-weight: bold;
-            background: linear-gradient(45deg, #ff6b6b, #45b7d1, #96ceb4, #ffeaa7, white);
-            background-size: 400% 400%;
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: cambioColores 3s ease infinite;
-        }
 
-        @keyframes cambioColores {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+      animation: float 15s infinite linear;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh) translateX(100px);
+        opacity: 0;
+      }
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 2.2rem; }
+      .textcol { font-size: 2.5rem; }
+      .subtitle { font-size: 1.2rem; }
+      .item { 
+        width: 100%; 
+        max-width: 300px;
+        padding: 25px 15px;
+        font-size: 1.2rem;
+      }
+      .icon { font-size: 2rem; }
+    }
   </style>
 </head>
 <body>
 
-  <h1 class="textcol">✦ El Refugio de las Creaciones ✦</h1>
+  <div class="particles" id="particles"></div>
 
-  <div class="menu">
-    <a href="prueba.html" style="text-decoration: none;text-decoration-color: none;"><div class="item">🎵 Letras & Canciones</div></a>
-    <div class="item" onclick="goTo('mensajes.html')">💫 Mensajes Interactivos</div>
-    <div class="item" onclick="goTo('secretos.html')">🔒 Libros con Contraseña</div>
-    <div class="item" onclick="goTo('otros.html')">🌙 Otros Proyectos</div>
+  <div class="container">
+    <h1 class="textcol">✦ El Refugio de las Creaciones ✦</h1>
+    <p class="subtitle">Un espacio para explorar la creatividad</p>
+
+    <div class="menu">
+      <a href="C:\xampp\htdocs\webadas\prueba.html" class="item">
+        <div class="icon">🎵</div>
+        <div>Letras & Canciones</div>
+      </a>
+      <a href="mensajes.html" class="item">
+        <div class="icon">💫</div>
+        <div>Mensajes Interactivos</div>
+      </a>
+      <a href="secretos.html" class="item">
+        <div class="icon">🔒</div>
+        <div>Libros con Contraseña</div>
+      </a>
+      <a href="otros.html" class="item">
+        <div class="icon">🌙</div>
+        <div>Otros Proyectos</div>
+      </a>
+    </div>
+
+    <footer>✦Hecho para Ti✦</footer>
   </div>
 
-
-  <footer>Hecho con arte ✦ por Ti</footer>
-
   <script>
-    function goTo(page) {
-      alert('Abrirá: ' + page);
-      // Aquí luego reemplazamos el alert con window.location.href = page;
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      const particleCount = 30;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        const size = Math.random() * 5 + 2;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100 + 100}%`;
+        
+        particle.style.animationDelay = `${Math.random() * 15}s`;
+        
+        particlesContainer.appendChild(particle);
+      }
     }
+    
+    window.addEventListener('load', createParticles);
   </script>
 
 </body>
-
 </html>
