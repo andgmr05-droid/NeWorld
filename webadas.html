@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Silkscreen&family=VT323&display=swap" rel="stylesheet">
+  <link rel="icon" href="C:\xampp\htdocs\webadas\enm.jpg" type="image/x-icon">
+  <title>Enamorado Tuyo</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      background-color: black;
+      color: white;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 1.8em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      margin: 0;
+      overflow: hidden;
+      position: relative;
+      background: linear-gradient(-45deg, #0c0c0c, #1a1a1a, #222244, #2a0033, #701B4B, #BF4188);
+      background-size: 400% 400%;
+      animation: gradientMove 10s ease infinite;
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* --- Fondo con imagen --- */
+    .fondo-imagen {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 0;
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .fondo-imagen img {
+      width: 1000px;
+      height: auto;
+    }
+
+    /* --- REFLECTORES --- */
+    .escenario {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .reflector {
+      position: absolute;
+      top: 0;
+      width: 200px;
+      height: 300px;
+      transform-origin: top center;
+      opacity: 1;
+    }
+
+    .reflector::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 400px;
+      height: 600px;
+      transform: translateX(-50%);
+      clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+      filter: blur(40px);
+      opacity: 0.7;
+    }
+
+    .reflector.celeste {
+      left: 20%;
+      animation: oscilar-izq 4s ease-in-out infinite alternate;
+    }
+    .reflector.celeste::before {
+      background: radial-gradient(circle at 50% 0%, rgba(0,255,255,1) 0%, rgba(0,255,255,0) 70%);
+    }
+
+    .reflector.rosado {
+      right: 20%;
+      animation: oscilar-der 4s ease-in-out infinite alternate;
+    }
+    .reflector.rosado::before {
+      background: radial-gradient(circle at 50% 0%, rgba(255,0,255,1) 0%, rgba(255,0,255,0) 70%);
+    }
+
+    @keyframes oscilar-izq {
+      0% { transform: rotate(-15deg); }
+      50% { transform: rotate(0deg); }
+      100% { transform: rotate(15deg); }
+    }
+    @keyframes oscilar-der {
+      0% { transform: rotate(15deg); }
+      50% { transform: rotate(0deg); }
+      100% { transform: rotate(-15deg); }
+    }
+
+    /* --- PARTÍCULAS --- */
+    .particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(127,255,212,0.8) 0%, rgba(0,255,255,0.1) 70%);
+      animation: float 6s linear infinite;
+      opacity: 0.6;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0) scale(1); opacity: 0.8; }
+      50% { transform: translateY(-40px) scale(1.2); opacity: 1; }
+      100% { transform: translateY(0) scale(1); opacity: 0.6; }
+    }
+
+    /* --- TEXTO --- */
+    #text {
+      white-space: pre-line;
+      text-shadow: 0 0 10px rgba(255,255,255,0.5);
+      max-width: 90%;
+      line-height: 1.4;
+      z-index: 2;
+      position: relative;
+    }
+
+    .cursor { display: inline-block; width: 3px; height: 1.2em; background-color: white; margin-left: 2px; animation: blink 1s infinite; vertical-align: middle; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    .onda { animation: onda 0.8s ease-in-out infinite alternate; color: #7fffd4; text-shadow: 0 0 8px #7fffd4, 0 0 15px #00ffff; }
+    @keyframes onda { 0% { transform: translateY(0); } 50% { transform: translateY(-5px) scale(1.05); } 100% { transform: translateY(0); } }
+
+    .countdown { font-size: 3em; font-weight: bold; color: #7fffd4; text-shadow: 0 0 15px #00ffff, 0 0 25px #7fffd4; animation: fadeInOut 1s ease-in-out forwards; }
+    @keyframes fadeInOut { 0% { opacity: 0; transform: scale(0.7); } 30% { opacity: 1; transform: scale(1.1); } 70% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(0.9); } }
+
+    .pulse { animation: pulse 1.5s infinite; color: #7fffd4; text-shadow: 0 0 10px #FFFFFF, 0 0 25px #FF7F9F; }
+    @keyframes pulse { 0% { opacity: 1; color: #FF7F9F; } 50% { opacity: 0.6; color: #FFFFFF; } 100% { opacity: 1; color: #FF7F9F; } }
+
+    .flash { animation: flash 0.4s alternate infinite; color: #ff69b4; text-shadow: 0 0 15px #ff69b4, 0 0 25px #ff1493; }
+    @keyframes flash { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+    /* --- PANTALLA DE INICIO --- */
+    #intro {
+      position: fixed;
+      inset: 0;
+      background: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 1;
+      transition: opacity 2s ease;
+    }
+    #intro.desvanecer {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Botón Play */
+    #playBtn {
+      width: 100px;
+      height: 100px;
+      border: 3px solid white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      animation: pulso 1.5s infinite;
+    }
+
+    @keyframes pulso {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    #playBtn::before {
+      content: '';
+      width: 0;
+      height: 0;
+      border-left: 25px solid white;
+      border-top: 15px solid transparent;
+      border-bottom: 15px solid transparent;
+      margin-left: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Pantalla negra con botón de Play -->
+  <div id="intro">
+    <div id="playBtn"></div>
+  </div>
+
+  <!-- Audio oculto -->
+  <audio id="miAudio" preload="auto" loop style="display: none;">
+    <source src="Enamoradotuyo2.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Fondo e iluminación -->
+  <div class="fondo-imagen">
+    <img src="C:/xampp/htdocs/webadas/canto2.png" alt="Canto">
+  </div>
+  <div class="escenario">
+    <div class="reflector celeste"></div>
+    <div class="reflector rosado"></div>
+  </div>
+
+  <div id="text"></div>
+
+  <script>
+    // ==== CONTROL DEL PLAY ====
+    const btn = document.getElementById("playBtn");
+    const intro = document.getElementById("intro");
+    const audio = document.getElementById("miAudio");
+
+    btn.addEventListener("click", () => {
+  intro.classList.add("desvanecer");
+  startCountdown(nextLine); // inicia la animación del texto y cuenta regresiva
+  
+  // Espera 3 segundos antes de reproducir el audio
+  setTimeout(() => {
+    audio.play().catch(e => console.log(e));
+  }, 3500);
+});
+
+    // ==== ANIMACIÓN DE TEXTO ====
+    const lines = [
+      "Y si te parece quee", "Yo estoy enamorado tuyoo", "Eso es un invento, intuyoo",
+      "No des crédito a murmulloss", "Porque casi nunca llamoo", "Para decir que te amop",
+      "Y más de una vez lo hicee", "A un número equivocadoo", "Casi nunca nadie dicee",
+      "Que yo estoy enamoradoo", "Tuuuuuuyoooooo ♡♡", "", "♡AndrewGMR♡♡", "",
+      "", "", "Raramente desespero", "Por tenerte aquí a mi lado", "Y eso no significa",
+      "Que tenga un significado", "", "Si pensás que amor yo siento", "Por favor no hagás pamento",
+      "No comentes con tu gente", "Sobre nuestro asunto", "", "Casi nunca nadie dice",
+      "Que yo estoy enamorado tuyo", "", "No te vistas, no te hagás la nunca vista",
+      "Tengo en vista a cantarte un", "Hasta la vista", "No te vistas, no te hagás la nunca vista",
+      "Tengo lista una canción que dice", "Hasta la vista, señorita", "",
+      "Casi nunca veo la foto", "Tuya en mi celular", "Sigue ahí por la pereza",
+      "Que me da apretar borrar", "", "No estoy tan obsesionado", "Vale como aclaración",
+      "Si pensás que es por eso", "Que yo canto esta canción", "",
+      "Casi nunca nadie dice", "Que yo estoy enamorado tuyo"
+    ];
+
+    const text = document.getElementById("text");
+    let lineIndex = 0;
+
+    function typeLine(line, callback) {
+      let i = 0;
+      text.textContent = "";
+      text.className = "";
+      if (line.includes("Tuuuuuuyoooooo")) text.classList.add("pulse");
+      else if (line.includes("♡AndrewGMR♡♡")) text.classList.add("flash");
+      else if (line.includes("Hasta la vista")) text.classList.add("shake");
+
+      const cursor = document.createElement("span");
+      cursor.className = "cursor";
+      text.appendChild(cursor);
+
+      let speed = 45;
+      if (line.includes("Tuuuuuuyoooooo")) speed = 150;
+
+      const interval = setInterval(() => {
+        if (i < line.length) {
+          text.innerHTML = line.substring(0, i) + '<span class="cursor"></span>';
+          i++;
+        } else {
+          clearInterval(interval);
+          setTimeout(() => clearLine(line, callback), 800);
+        }
+      }, speed);
+    }
+
+    function clearLine(line, callback) {
+      let i = text.textContent.length;
+      const eraseSpeed = 15;
+      const interval = setInterval(() => {
+        text.textContent = text.textContent.substring(0, i);
+        i--;
+        if (i < 0) {
+          clearInterval(interval);
+          setTimeout(callback, 200);
+        }
+      }, eraseSpeed);
+    }
+
+    function nextLine() {
+      if (lineIndex >= lines.length) lineIndex = 0;
+      const line = lines[lineIndex];
+      lineIndex++;
+      if (line === "") setTimeout(nextLine, 300);
+      else typeLine(line, nextLine);
+    }
+
+    function startCountdown(callback) {
+      const countdownNumbers = ["3", "2", "1"];
+      let index = 0;
+      function showNext() {
+        if (index < countdownNumbers.length) {
+          text.innerHTML = `<span class="countdown onda">${countdownNumbers[index]}</span>`;
+          index++;
+          setTimeout(showNext, 1000);
+        } else {
+          text.innerHTML = "";
+          setTimeout(callback, 500);
+        }
+      }
+      showNext();
+    }
+
+    // Generar partículas
+    for (let i = 0; i < 20; i++) {
+      const particle = document.createElement("div");
+      particle.classList.add("particle");
+      particle.style.top = Math.random() * 100 + "vh";
+      particle.style.left = Math.random() * 100 + "vw";
+      particle.style.animationDuration = 5 + Math.random() * 5 + "s";
+      particle.style.animationDelay = Math.random() * 3 + "s";
+      document.body.appendChild(particle);
+    }
+  </script>
+</body>
+</html>

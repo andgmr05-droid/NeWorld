@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>El Refugio de las Creaciones</title>
+
+  <!-- Fuentes y estilo -->
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'VT323', monospace;
+      background: radial-gradient(circle at top, #0a0a0f, #000);
+      color: #fff;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-size: 2rem;
+      letter-spacing: 3px;
+      text-shadow: 0 0 8px #8df;
+      margin-bottom: 30px;
+      text-align: center;
+      animation: fadeIn 2s ease;
+    }
+
+    .menu {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      width: 90%;
+      max-width: 600px;
+    }
+
+    .item {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      width: 45%;
+      padding: 20px;
+      text-align: center;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+    }
+
+    .item:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(1.05);
+      box-shadow: 0 0 15px #8df5;
+    }
+
+    .item:active {
+      transform: scale(0.97);
+    }
+
+    footer {
+      position: absolute;
+      bottom: 10px;
+      font-size: 0.9rem;
+      opacity: 0.6;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Adaptación para celular */
+    @media (max-width: 600px) {
+      h1 { font-size: 1.6rem; }
+      .item { width: 80%; }
+    }
+    .textcol {
+            font-size: 40px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff6b6b, #45b7d1, #96ceb4, #ffeaa7, white);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: cambioColores 3s ease infinite;
+        }
+
+        @keyframes cambioColores {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+  </style>
+</head>
+<body>
+
+  <h1 class="textcol">✦ El Refugio de las Creaciones ✦</h1>
+
+  <div class="menu">
+    <div class="item" onclick="goTo('musica.html')">🎵 Letras & Canciones</div>
+    <div class="item" onclick="goTo('mensajes.html')">💫 Mensajes Interactivos</div>
+    <div class="item" onclick="goTo('secretos.html')">🔒 Libros con Contraseña</div>
+    <div class="item" onclick="goTo('otros.html')">🌙 Otros Proyectos</div>
+  </div>
+
+  <footer>Hecho con arte ✦ por Ti</footer>
+
+  <script>
+    function goTo(page) {
+      alert('Abrirá: ' + page);
+      // Aquí luego reemplazamos el alert con window.location.href = page;
+    }
+  </script>
+
+</body>
+</html>

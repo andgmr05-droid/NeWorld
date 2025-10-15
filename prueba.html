@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Contador con sonido vaquetazo</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      font-family: 'Courier New', monospace;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      overflow: hidden;
+      margin: 0;
+    }
+    #contador {
+      font-size: 9rem;
+      opacity: 0;
+      transform: scale(0.6);
+      transition: all 0.3s ease-out;
+    }
+    #contador.visible {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+    #mensajeFinal {
+      font-size: 3rem;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+    #mensajeFinal.visible {
+      opacity: 1;
+    }
+    button {
+      margin-top: 2rem;
+      font-size: 1.2rem;
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      background: transparent;
+      border: 2px solid white;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    button:hover {
+      background: white;
+      color: black;
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="contador">3</div>
+  <div id="mensajeFinal">¡Vamos!</div>
+  <button id="btnIniciar">Iniciar conteo</button>
+
+  <script>
+    const contador = document.getElementById("contador");
+    const mensaje = document.getElementById("mensajeFinal");
+    const btn = document.getElementById("btnIniciar");
+    
+    // Crear audio programáticamente con un sonido más confiable
+    const golpe = new Audio();
+    golpe.src = "https://assets.mixkit.co/sfx/preview/mixkit-boxing-punch-2051.mp3";
+    golpe.preload = "auto";
+    golpe.volume = 0.7;
+
+    const numeros = [3, 2, 1];
+    let conteoEnProgreso = false;
+
+    function reproducirGolpe() {
+      // Crear una nueva instancia del audio para evitar conflictos
+      const sonido = new Audio(golpe.src);
+      sonido.volume = 0.7;
+      sonido.play().catch(e => {
+        console.log("Error reproduciendo sonido:", e);
+      });
+    }
+
+    async function ejecutarConteo() {
+      if (conteoEnProgreso) return;
+      
+      conteoEnProgreso = true;
+      btn.disabled = true;
+      
+      // Resetear estado
+      mensaje.classList.remove("visible");
+      contador.style.display = "block";
+      contador.classList.remove("visible");
+
+      for (let i = 0; i < numeros.length; i++) {
+        contador.textContent = numeros[i];
+        contador.classList.add("visible");
+        reproducirGolpe();
+
+        await new Promise(resolve => setTimeout(resolve, 800));
+        contador.classList.remove("visible");
+        await new Promise(resolve => setTimeout(resolve, 200));
+      }
+
+      contador.style.display = "none";
+      mensaje.classList.add("visible");
+      reproducirGolpe();
+
+      // Reactivar botón después de un breve delay
+      setTimeout(() => {
+        conteoEnProgreso = false;
+        btn.disabled = false;
+      }, 1000);
+    }
+
+    btn.addEventListener("click", () => {
+      ejecutarConteo();
+    });
+
+    // Precargar el sonido cuando la página cargue
+    window.addEventListener('load', () => {
+      // Intentar cargar el audio silenciosamente para precargarlo
+      golpe.volume = 0;
+      golpe.play().then(() => {
+        golpe.pause();
+        golpe.currentTime = 0;
+        golpe.volume = 0.7;
+      }).catch(e => {
+        console.log("Precarga de audio falló:", e);
+      });
+    });
+  </script>
+
+</body>
+</html>
