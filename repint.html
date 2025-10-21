@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Repositorio Musical</title>
+    <link rel="icon" href="LOGO02.png" type="image/x-icon">
+
+</head>
+
+<style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    .up {
+      width: 100%;
+      background-color: #1F1D1D; 
+      height: 80px; 
+      position: fixed; 
+      top: 0;
+      left: 0;
+      z-index: 1000;
+      opacity: 70%;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+background: linear-gradient(135deg, #0F0F0A 0%, #2D2E1A 50%, #3E3916 100%);      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      overflow-x: hidden;
+      margin-top: 10px; 
+    }
+
+    /* partículas */
+    .particle {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+      animation: float 15s infinite linear;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0) translateX(0); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+    }
+
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    /* 🔹 Contenedor de búsqueda */
+    .search-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 120px auto 30px;
+      position: relative;
+    }
+
+    .search-box {
+      width: 100%;
+      padding: 15px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .search-box:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .search-box::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .search-icon {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 20px;
+    }
+
+    .contenedor-tarjetas {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 30px;
+      justify-content: center;
+      margin-top: 30px;
+      padding: 0 20px;
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* 🔹 Diseño de tarjetas */
+    .tarjeta {
+      background: rgba(30, 30, 40, 0.7);
+      border-radius: 16px;
+      transition: all 0.4s ease;
+      cursor: pointer;
+      overflow: hidden;
+      position: relative;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tarjeta:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+      border-color: rgba(78, 205, 196, 0.4);
+    }
+
+    .tarjeta-poster-container {
+      position: relative;
+      overflow: hidden;
+      height: 300px;
+      flex-shrink: 0;
+    }
+
+    .tarjeta-poster {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .tarjeta:hover .tarjeta-poster {
+      transform: scale(1.05);
+    }
+
+    .tarjeta-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: #F7C82F;
+      color: #0a0a0f;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.8em;
+      font-weight: 600;
+      z-index: 2;
+    }
+
+    .tarjeta-info {
+      padding: 20px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .tarjeta-tit {
+      font-size: 1.3em;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+
+    .tarjeta-desc {
+      color: #F7C82F;
+      font-size: 0.95em;
+      font-weight: 500;
+      background: rgba(78, 205, 196, 0.15);
+      padding: 5px 12px;
+      border-radius: 20px;
+      display: inline-block;
+      border: 1px solid rgba(78, 205, 196, 0.3);
+      align-self: flex-start;
+    }
+
+    .tarjeta-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 15px;
+    }
+
+    .tarjeta-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .tarjeta-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
+
+    .tarjeta-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.1);
+    }
+
+    .tarjeta-btn.play {
+      background: rgba(255, 255, 255, 0.1);
+      color: #F7C82F;
+    }
+
+    .tarjeta-btn.play:hover {
+      background: rgba(205, 178, 88, 0.3);
+    }
+
+    .no-results {
+      text-align: center;
+      margin-top: 50px;
+      font-size: 1.5em;
+      color: rgba(255, 255, 255, 0.6);
+      grid-column: 1 / -1;
+    }
+
+    /* Animación de entrada para las tarjetas */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .tarjeta {
+      animation: fadeInUp 0.5s ease forwards;
+      opacity: 0;
+    }
+
+    .tarjeta:nth-child(1) { animation-delay: 0.1s; }
+    .tarjeta:nth-child(2) { animation-delay: 0.2s; }
+    .tarjeta:nth-child(3) { animation-delay: 0.3s; }
+    .tarjeta:nth-child(4) { animation-delay: 0.4s; }
+    .tarjeta:nth-child(5) { animation-delay: 0.5s; }
+    .tarjeta:nth-child(6) { animation-delay: 0.6s; }
+
+    /* 🔹 Estilos para el sistema de comentarios */
+    .comments-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 2000;
+      backdrop-filter: blur(5px);
+    }
+
+    .comments-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 600px;
+      max-height: 80vh;
+      background: rgba(30, 30, 40, 0.95);
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .comments-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .comments-title {
+      font-size: 1.5em;
+      color: #fff;
+    }
+
+    .close-comments {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1.5em;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    .close-comments:hover {
+      color: #ff6b6b;
+    }
+
+    .comments-list {
+      flex-grow: 1;
+      overflow-y: auto;
+      margin-bottom: 20px;
+      max-height: 300px;
+    }
+
+    .comment-item {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-left: 3px solid #4ecdc4;
+    }
+
+    .comment-author {
+      font-weight: bold;
+      color: #4ecdc4;
+      margin-bottom: 5px;
+    }
+
+    .comment-text {
+      color: rgba(255, 255, 255, 0.9);
+      line-height: 1.4;
+    }
+
+    .comment-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .comment-input {
+      width: 100%;
+      padding: 12px 15px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .comment-input:focus {
+      outline: none;
+      border-color: #4ecdc4;
+    }
+
+    .comment-submit {
+      background: #4ecdc4;
+      color: #0a0a0f;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 20px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+      align-self: flex-end;
+    }
+
+    .comment-submit:hover {
+      background: #3dbab0;
+    }
+
+    .no-comments {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.5);
+      padding: 20px;
+    }
+    .fondo-imagen {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 0;
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    .fondo-imagen img {
+      width: 500px;
+      height: auto;
+        filter: 
+    drop-shadow(0 0 5px #F2FF00)
+    drop-shadow(0 0 2px #F2FF00)
+
+
+    }
+</style>
+
+<body>
+<header class="up" style="display: flex; align-items: center; padding-left: 30px;">
+    <a href="index.html" style="display: flex; align-items: center; text-decoration: none; color: white; gap: 5px; font-size: 20px;">
+        <i class="fas fa-reply"></i>
+        <span style="font-family: Arial; font-size: 20px; margin-top: 2px;">Regresar</span>
+    </a>
+</header>
+ <div class="fondo-imagen">
+    <img src="LOGO02.png" alt="Canto">
+  </div>
+
+<div class="particles" id="particles"></div>
+
+<div class="search-container">
+    <input type="text" class="search-box" id="searchInput" placeholder="Buscar portadas...">
+    <i class="fas fa-search search-icon"></i>
+</div>
+
+<!-- 🔹 Aquí agrupamos las tarjetas -->
+<div class="contenedor-tarjetas" id="cardsContainer">
+  <!-- Tarjetas se generarán dinámicamente -->
+</div>
+
+<!-- 🔹 Modal de comentarios -->
+<div class="comments-modal" id="commentsModal">
+  <div class="comments-content">
+    <div class="comments-header">
+      <h2 class="comments-title" id="commentsTitle">Comentarios</h2>
+      <button class="close-comments" id="closeComments">&times;</button>
+    </div>
+    <div class="comments-list" id="commentsList">
+      <!-- Los comentarios se cargarán aquí -->
+    </div>
+    <form class="comment-form" id="commentForm">
+      <textarea class="comment-input" id="commentInput" placeholder="Escribe tu comentario..." required></textarea>
+      <button type="submit" class="comment-submit">Publicar comentario</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  const cardsData = [
+    {
+      id: 1,
+      title: "Cuarteto de Nos - Enamorado Tuyo",
+      description: "Short Version",
+      image: "enm.jpg",
+      link: "webadas.html",
+      badge: "Nuevo"
+    },
+    {
+      id: 2,
+      title: "Cuarteto de Nos - Enamorado Tuyo",
+      description: "Full Version",
+      image: "enm.jpg",
+      link: "webadas.html",
+      badge: "Popular"
+    },
+    {
+      id: 3,
+      title: "One Eyed Peas - Rock That Body",
+      description: "Short Ver.",
+      image: "rtb.jpg",
+      link: "RTB.html",
+      badge: "Nuevo"
+    },
+    {
+      id: 4,
+      title: "La La Love You - El Fin del Mundo",
+      description: "Short Ver.",
+      image: "FDM.jpg",
+      link: "#",
+      badge: "Proximo"
+    },
+    {
+      id: 5,
+      title: "Cuarteto de Nos - Miguel Gritar",
+      description: "Álbum: Porfiado",
+      image: "enm.jpg",
+      link: "webadas.html"
+    },
+    {
+      id: 6,
+      title: "Cuarteto de Nos - Lo malo de ser bueno",
+      description: "Álbum: Apocalipsis Zombi",
+      image: "enm.jpg",
+      link: "webadas.html",
+      badge: "Trending"
+    }
+  ];
+
+  // Función para crear partículas
+  function createParticles() {
+    const particlesContainer = document.getElementById('particles');
+    const particleCount = 30;
+    
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement('div');
+      particle.classList.add('particle');
+      
+      const size = Math.random() * 5 + 2;
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
+      
+      particle.style.left = `${Math.random() * 100}%`;
+      particle.style.top = `${Math.random() * 100 + 100}%`;
+      
+      particle.style.animationDelay = `${Math.random() * 15}s`;
+      
+      particlesContainer.appendChild(particle);
+    }
+  }
+
+  // Función para renderizar tarjetas
+  function renderCards(cards) {
+    const container = document.getElementById('cardsContainer');
+    container.innerHTML = '';
+    
+    if (cards.length === 0) {
+      container.innerHTML = '<div class="no-results">No se encontraron resultados</div>';
+      return;
+    }
+    
+    cards.forEach(card => {
+      const cardElement = document.createElement('div');
+      cardElement.className = 'tarjeta';
+      
+      cardElement.innerHTML = `
+        <div class="tarjeta-poster-container">
+          <img src="${card.image}" alt="${card.title}" class="tarjeta-poster">
+          ${card.badge ? `<div class="tarjeta-badge">${card.badge}</div>` : ''}
+        </div>
+        <div class="tarjeta-info">
+          <div class="tarjeta-tit">${card.title}</div>
+          <div class="tarjeta-footer">
+            <div class="tarjeta-desc">${card.description}</div>
+            <div class="tarjeta-actions">
+              <button class="tarjeta-btn play" onclick="event.stopPropagation(); window.open('${card.link}', '_blank')">
+                <i class="fas fa-play"></i>
+              </button>
+              <button class="tarjeta-btn" onclick="event.stopPropagation(); toggleFavorite(${card.id})">
+                <i class="far fa-heart"></i>
+              </button>
+              <button class="tarjeta-btn" onclick="event.stopPropagation(); openComments(${card.id})">
+                <i class="far fa-comment"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      // Agregar evento de clic a toda la tarjeta
+      cardElement.addEventListener('click', () => {
+        window.open(card.link, '_blank');
+      });
+      
+      container.appendChild(cardElement);
+    });
+  }
+
+  // Función de búsqueda
+  function searchCards() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    
+    if (searchTerm === '') {
+      renderCards(cardsData);
+      return;
+    }
+    
+    const filteredCards = cardsData.filter(card => 
+      card.title.toLowerCase().includes(searchTerm) || 
+      card.description.toLowerCase().includes(searchTerm)
+    );
+    
+    renderCards(filteredCards);
+  }
+
+  // Función para favoritos (simulada)
+  function toggleFavorite(cardId) {
+    const btn = event.currentTarget;
+    btn.classList.toggle('active');
+    
+    if (btn.classList.contains('active')) {
+      btn.innerHTML = '<i class="fas fa-heart"></i>';
+    } else {
+      btn.innerHTML = '<i class="far fa-heart"></i>';
+    }
+    
+    // Aquí normalmente enviarías una solicitud al servidor
+    console.log(`Tarjeta ${cardId} ${btn.classList.contains('active') ? 'agregada a' : 'eliminada de'} favoritos`);
+  }
+
+  // 🔹 SISTEMA DE COMENTARIOS SIN BASE DE DATOS
+  let currentCardId = null;
+
+  // Obtener comentarios del localStorage
+  function getComments(cardId) {
+    const comments = localStorage.getItem(`comments_${cardId}`);
+    return comments ? JSON.parse(comments) : [];
+  }
+
+  // Guardar comentarios en el localStorage
+  function saveComment(cardId, author, text) {
+    const comments = getComments(cardId);
+    const newComment = {
+      id: Date.now(),
+      author: author || 'Anónimo',
+      text: text,
+      date: new Date().toLocaleString()
+    };
+    
+    comments.push(newComment);
+    localStorage.setItem(`comments_${cardId}`, JSON.stringify(comments));
+    return newComment;
+  }
+
+  // Abrir modal de comentarios
+  function openComments(cardId) {
+    currentCardId = cardId;
+    const modal = document.getElementById('commentsModal');
+    const commentsList = document.getElementById('commentsList');
+    const commentsTitle = document.getElementById('commentsTitle');
+    
+    // Obtener título de la tarjeta
+    const card = cardsData.find(c => c.id === cardId);
+    commentsTitle.textContent = `Comentarios - ${card.title}`;
+    
+    // Cargar comentarios
+    const comments = getComments(cardId);
+    displayComments(comments);
+    
+    // Mostrar modal
+    modal.style.display = 'block';
+  }
+
+  // Mostrar comentarios en el modal
+  function displayComments(comments) {
+    const commentsList = document.getElementById('commentsList');
+    
+    if (comments.length === 0) {
+      commentsList.innerHTML = '<div class="no-comments">No hay comentarios aún. ¡Sé el primero en comentar!</div>';
+      return;
+    }
+    
+    commentsList.innerHTML = comments.map(comment => `
+      <div class="comment-item">
+        <div class="comment-author">${comment.author}</div>
+        <div class="comment-text">${comment.text}</div>
+        <div style="font-size: 0.8em; color: rgba(255,255,255,0.5); margin-top: 5px;">${comment.date}</div>
+      </div>
+    `).join('');
+  }
+
+  // Cerrar modal de comentarios
+  function closeComments() {
+    const modal = document.getElementById('commentsModal');
+    modal.style.display = 'none';
+    currentCardId = null;
+  }
+
+  // Enviar comentario
+  function submitComment(event) {
+    event.preventDefault();
+    
+    const commentInput = document.getElementById('commentInput');
+    const text = commentInput.value.trim();
+    
+    if (!text) return;
+    
+    // Guardar comentario
+    const newComment = saveComment(currentCardId, 'Usuario', text);
+    
+    // Recargar y mostrar comentarios
+    const comments = getComments(currentCardId);
+    displayComments(comments);
+    
+    // Limpiar campo de texto
+    commentInput.value = '';
+  }
+
+  // Inicialización
+  window.addEventListener('load', () => {
+    createParticles();
+    renderCards(cardsData);
+    
+    // Configurar el evento de búsqueda
+    document.getElementById('searchInput').addEventListener('input', searchCards);
+    
+    // Configurar sistema de comentarios
+    document.getElementById('closeComments').addEventListener('click', closeComments);
+    document.getElementById('commentForm').addEventListener('submit', submitComment);
+    
+    // Cerrar modal al hacer clic fuera
+    document.getElementById('commentsModal').addEventListener('click', (e) => {
+      if (e.target.id === 'commentsModal') closeComments();
+    });
+  });
+</script>
+<button id="commentsToggle" 
+        style="
+          position: fixed; 
+          bottom: 25px; 
+          right: 25px; 
+          background: #4ecdc4; 
+          color: #0a0a0f; 
+          border: none; 
+          border-radius: 50%; 
+          width: 60px; 
+          height: 60px; 
+          font-size: 26px; 
+          cursor: pointer; 
+          box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+          transition: all 0.3s ease;
+          z-index: 2000;">
+  💬
+</button>
+
+<!-- 🔹 Contenedor oculto de comentarios -->
+<div id="utterancesContainer" 
+     style="
+       position: fixed; 
+       bottom: 100px; 
+       right: 25px; 
+       width: 90%; 
+       max-width: 600px; 
+       height: 400px; 
+       background: rgba(30,30,40,0.95);
+       border-radius: 16px; 
+       padding: 15px;
+       box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+       border: 1px solid rgba(255,255,255,0.1);
+       overflow: hidden;
+       display: none;
+       z-index: 2000;">
+  <script src="https://utteranc.es/client.js"
+          repo="andgmr05-droid/neworld"
+          issue-term="pathname"
+          theme="github-dark"
+          crossorigin="anonymous"
+          async>
+  </script>
+</div>
+
+<script>
+  // Toggle para mostrar/ocultar el cuadro de comentarios
+  const commentsToggle = document.getElementById('commentsToggle');
+  const utterancesContainer = document.getElementById('utterancesContainer');
+
+  commentsToggle.addEventListener('click', () => {
+    const isVisible = utterancesContainer.style.display === 'block';
+    utterancesContainer.style.display = isVisible ? 'none' : 'block';
+    commentsToggle.style.background = isVisible ? '#4ecdc4' : '#3dbab0';
+  });
+</script>
+</body>
+</html>
